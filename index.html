@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="container">
+            <h1>Personal Information Form</h1>
+            <br>
+            <div class="labelInput">
+            <label for="name">Name:</label>
+            <br>
+            <input type="text" id="name" class="inpName" placeholder="Enter your name">
+            <br>
+            <br>
+            <label for="age">Age:</label>
+            <br>
+            <input type="number" id="age" class="inpAge" placeholder="Enter your age">
+            <br>
+            <br>
+            <label for="hobbies">Hobbies:</label>
+            <br>
+            <input type="text" id="hobbies" class="inpPlaceholder" placeholder="Enter your hobbies">
+            <br>
+            <br>
+            <label for="student">Are you a student?</label>
+            <br>
+            <input type="checkbox" id="checkbox" class="cbox">
+            <br>
+            <button class="submitBtn" id="submitBtn">Submit</button>
+            <button class="resetBtn" id="resetBtn">Reset</button>
+            <br> 
+            <br>
+            <h2>Summary</h2>
+            <div id="summaryOutput" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let summaries = [];
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const name = document.getElementById('name').value.trim();
+            const age = document.getElementById('age').value.trim();
+            const hobbies = document.getElementById('hobbies').value.trim();
+            const isStudent = document.getElementById('checkbox').checked;
+
+            if (!name || !age || !hobbies) {
+                alert("Please complete all fields before submitting.");
+                return;
+            }
+
+            const summary = {
+                name: name,
+                age: age,
+                hobbies: hobbies,
+                isStudent: isStudent
+            };
+
+            summaries.push(summary);
+            renderSummaries();
+
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('hobbies').value = '';
+            document.getElementById('checkbox').checked = false;
+        });
+
+        function renderSummaries() {
+            const summaryOutput = document.getElementById('summaryOutput');
+            summaryOutput.innerHTML = '';
+
+            summaries.forEach((summary, index) => {
+                const summaryDiv = document.createElement('div');
+                summaryDiv.classList.add('summary-border');
+                summaryDiv.innerHTML = `
+                    <p><strong>Name:</strong>"${summary.name}</p>
+                    <p><strong>Age:</strong> ${summary.age}</p>
+                    <p><strong>Hobbies:</strong> ${summary.hobbies}</p>
+                    <p><strong>Are you a student?</strong> ${summary.isStudent ? 'Yes' : 'No'}</p>
+                    <button onclick="editSummary(${index})" class="editBtn">Edit</button>
+                    <button onclick="deleteSummary(${index})" class="deleteBtn">Delete</button>
+                `;
+                summaryOutput.appendChild(summaryDiv);
+            });
+        }
+
+        function editSummary(index) {
+            const summary = summaries[index];
+
+            document.getElementById('name').value = summary.name;
+            document.getElementById('age').value = summary.age;
+            document.getElementById('hobbies').value = summary.hobbies;
+            document.getElementById('checkbox').checked = summary.isStudent;
+
+            summaries.splice(index, 1);
+            renderSummaries();
+        }
+
+        function deleteSummary(index) {
+            summaries.splice(index, 1);
+            renderSummaries();
+        }
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('hobbies').value = '';
+            document.getElementById('checkbox').checked = false;
+
+            summaries = [];
+            renderSummaries();
+        });
+    </script>
+
+</body>
+</html>
