@@ -13,31 +13,27 @@
             <h1>Personal Information Form</h1>
             <br>
             <div class="labelInput">
-            <label for="name">Name:</label>
-            <br>
-            <input type="text" id="name" class="inpName" placeholder="Enter your name">
-            <br>
-            <br>
-            <label for="age">Age:</label>
-            <br>
-            <input type="number" id="age" class="inpAge" placeholder="Enter your age">
-            <br>
-            <br>
-            <label for="hobbies">Hobbies:</label>
-            <br>
-            <input type="text" id="hobbies" class="inpPlaceholder" placeholder="Enter your hobbies">
-            <br>
-            <br>
-            <label for="student">Are you a student?</label>
-            <br>
-            <input type="checkbox" id="checkbox" class="cbox">
-            <br>
-            <button class="submitBtn" id="submitBtn">Submit</button>
-            <button class="resetBtn" id="resetBtn">Reset</button>
-            <br> 
-            <br>
-            <h2>Summary</h2>
-            <div id="summaryOutput" style="margin-top: 20px;"></div>
+                <label for="name">Name:</label>
+                <br>
+                <input type="text" id="name" class="inpName" placeholder="Enter your name">
+                <br><br>
+                <label for="age">Age:</label>
+                <br>
+                <input type="number" id="age" class="inpAge" placeholder="Enter your age" min="0" step="1" oninput="validateAge()">
+                <br><br>
+                <label for="hobbies">Hobbies:</label>
+                <br>
+                <input type="text" id="hobbies" class="inpPlaceholder" placeholder="Enter your hobbies">
+                <br><br>
+                <label for="student">Are you a student?</label>
+                <br>
+                <input type="checkbox" id="checkbox" class="cbox">
+                <br><br>
+                <button class="submitBtn" id="submitBtn">Submit</button>
+                <button class="resetBtn" id="resetBtn">Reset</button>
+                <br><br>
+                <h2>Summary</h2>
+                <div id="summaryOutput" style="margin-top: 20px;"></div>
             </div>
         </div>
     </div>
@@ -51,14 +47,15 @@
             const hobbies = document.getElementById('hobbies').value.trim();
             const isStudent = document.getElementById('checkbox').checked;
 
-            if (!name || !age || !hobbies) {
-                alert("Please complete all fields before submitting.");
+            // Check if the age is a valid integer and greater than 0
+            if (!name || !age || !hobbies || isNaN(age) || parseInt(age) <= 0) {
+                alert("Please complete all fields correctly before submitting.");
                 return;
             }
 
             const summary = {
                 name: name,
-                age: age,
+                age: parseInt(age),
                 hobbies: hobbies,
                 isStudent: isStudent
             };
@@ -72,6 +69,16 @@
             document.getElementById('checkbox').checked = false;
         });
 
+        function validateAge() {
+            const ageInput = document.getElementById('age');
+            const value = ageInput.value;
+
+            // Clear the input if it's not a valid integer
+            if (!Number.isInteger(parseFloat(value)) || value < 0) {
+                ageInput.value = '';
+            }
+        }
+
         function renderSummaries() {
             const summaryOutput = document.getElementById('summaryOutput');
             summaryOutput.innerHTML = '';
@@ -80,7 +87,7 @@
                 const summaryDiv = document.createElement('div');
                 summaryDiv.classList.add('summary-border');
                 summaryDiv.innerHTML = `
-                    <p><strong>Name:</strong>${summary.name}</p>
+                    <p><strong>Name:</strong> ${summary.name}</p>
                     <p><strong>Age:</strong> ${summary.age}</p>
                     <p><strong>Hobbies:</strong> ${summary.hobbies}</p>
                     <p><strong>Are you a student?</strong> ${summary.isStudent ? 'Yes' : 'No'}</p>
